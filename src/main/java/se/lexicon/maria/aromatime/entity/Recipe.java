@@ -1,5 +1,6 @@
 package se.lexicon.maria.aromatime.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -11,49 +12,53 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
+
+
+import javax.persistence.JoinColumn;
 
 
 @Entity
-@Table(name="Recipe")
 public class Recipe {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "Id")
 	private int id;
 	
-	@Column(name = "Name")
 	private String recipeName;
 	
-	@Column(name = "Desc")
+	@Column(name = "ShortDesc")
 	private String shortDescription;
 	
-	@Column(name = "URL")
 	private String urlPath;
 	
 	@OneToMany(
 			cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH},
-			fetch = FetchType.EAGER, 
+			fetch = FetchType.LAZY, 
 			mappedBy = "recipe",
 			orphanRemoval = true
 		)
 	private Set<RecipeContent> content = new TreeSet<>();
 	
 	
-	@ManyToMany
-	private List<RecipeCategory> categoryList; 	//List of categories for this recipe
+	@ManyToMany(
+			cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH},
+			fetch = FetchType.LAZY
+		)
+	@JoinTable(name= "recipe_categoriy"
+			, joinColumns= @JoinColumn(name= "recipe_id")
+			, inverseJoinColumns= @JoinColumn(name= "category_id"))
+	private List<RecipeCategory> categoryList = new ArrayList<>(); 	//List of categories for this recipe
 	
 	
 	public Recipe(String recipeName, String shortDescription, String urlPath) {
-		super();
 		this.recipeName = recipeName;
 		this.shortDescription = shortDescription;
 		this.urlPath = urlPath;
 	}
 
-	protected Recipe() {}
+	public Recipe() {}
 
 	
 
@@ -129,23 +134,36 @@ public class Recipe {
 		return true;
 	}
 	
-//	public boolean addOrderItem(OrderItem item) {
-//		if(item.getOrder() != null) {
-//			throw new IllegalArgumentException();
-//		}
-//		
-//		item.setOrder(this);		
-//		return content.add(item);
-//				
-//	}
-//	
-//	public boolean removeOrderItem(OrderItem item) {
-//		if(!content.contains(item)) {
-//			throw new IllegalArgumentException();
-//		}
-//		
-//		item.setOrder(null);
-//		return content.remove(item);
-//	}
+	
+	public boolean addRecipeContent(RecipeContent ingredient) {
+		if(ingredient.getRecipe() != null) {
+			throw new IllegalArgumentException();
+		}
+		
+		ingredient.setRecipe(this);
+		return content.add(ingredient);
+	}
+	
+	public boolean removeRecipeContent(RecipeContent ingredient) {
+		if(!content.contains(ingredient)) {
+			throw new IllegalArgumentException();
+		}
+		
+		ingredient.setRecipe(null);
+		return content.remove(ingredient);
+	}
+	
+	
+	public void addCategory(RecipeCategory category) {
+		if(!categoryList.contains(category)) {
+			categoryList.add(category);
+		}
+	}
+	
+	public void removeCategory(RecipeCategory category) {
+		if(categoryList.contains(category)) {
+			categoryList.remove(category);
+		}
+	}
 	
 }

@@ -8,14 +8,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="Oil")
 public class Oil {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "Id")
 	private int id;
 	
-	@Column(name = "Name")
 	private String oilName;
 	
 	public Oil(String oilName) {
@@ -70,8 +67,5 @@ public class Oil {
 			return false;
 		return true;
 	}
-	
-	
-	
 	
 }

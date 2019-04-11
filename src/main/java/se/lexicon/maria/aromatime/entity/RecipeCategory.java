@@ -1,28 +1,39 @@
 package se.lexicon.maria.aromatime.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="Category")
 public class RecipeCategory {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "Id")
 	private int id;
 	
-	@Column(name = "Name")
 	private String categoryName;
 	
-	@ManyToMany
-	private List<Recipe> recipeList; 	//List of recipes for this category
+	@ManyToMany(
+			cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH},
+			fetch = FetchType.LAZY
+		)
+	@JoinTable(name= "recipe_categoriy"
+			, joinColumns= @JoinColumn(name= "category_id")
+			, inverseJoinColumns= @JoinColumn(name= "recipe_id"))
+	private List<Recipe> recipeList = new ArrayList<>(); 	//List of recipes for this category
+	//Because of cascade, recipeList do not need any methods for adding and removing recipes,
+	//it is taken cared of in Entry Recipe.
+															
 	
 	
 	public RecipeCategory(String categoryName, List<Recipe> recipeList) {
@@ -86,7 +97,6 @@ public class RecipeCategory {
 		return true;
 	}
 	
-
 	
 	
 }

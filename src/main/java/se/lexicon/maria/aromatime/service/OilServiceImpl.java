@@ -3,6 +3,8 @@ package se.lexicon.maria.aromatime.service;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +37,7 @@ public class OilServiceImpl implements OilService{
 
 	@Override
 	public List<Oil> findByName(String name) {
-		return oilRepo.findByNameIgnoreCase(name);
+		return oilRepo.findByOilNameIgnoreCase(name);
 	}
 
 	@Override
@@ -50,4 +52,17 @@ public class OilServiceImpl implements OilService{
 	}
 
 
+	/**
+	 * @param oilId 
+	 * @param updated
+	 * @return Oil original updated 
+	 * @throws EntityNotFoundException when original oil could not be found with oilId
+	 */
+	
+	@Override
+	public Oil update(int oilId, Oil updated) throws EntityNotFoundException{
+		Oil original = findById(oilId);		
+		original.setOilName(updated.getOilName());
+		return oilRepo.save(original);
+	}
 }

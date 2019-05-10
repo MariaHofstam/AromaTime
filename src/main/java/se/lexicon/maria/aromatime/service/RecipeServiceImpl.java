@@ -3,6 +3,8 @@ package se.lexicon.maria.aromatime.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +37,7 @@ public class RecipeServiceImpl implements RecipeService{
 
 	@Override
 	public List<Recipe> findByName(String name) {
-		return recipeRepo.findByNameIgnoreCase(name);
+		return recipeRepo.findByRecipeNameIgnoreCase(name);
 	}
 	
 	@Override
@@ -50,7 +52,7 @@ public class RecipeServiceImpl implements RecipeService{
 	}
 	
 	@Override
-	public boolean removeRecipe(int id) {
+	public boolean removeRecipe(int id) {		//needed?
 			recipeRepo.deleteById(id);		
 			return recipeRepo.existsById(id);
 	}
@@ -73,6 +75,19 @@ public class RecipeServiceImpl implements RecipeService{
 		
 		return recipeRepo.save(newRecipe);
 	}
-	
 
+	
+	/**
+	 * @param recipeId 
+	 * @param updated
+	 * @return Recipe original updated 
+	 * @throws EntityNotFoundException when original recipe could not be found with recipeId
+	 */
+	
+	@Override
+	public Recipe update(int recipeId, Recipe updated) throws EntityNotFoundException{
+		Recipe original = findRecipeById(recipeId);		
+		original.setRecipeName(updated.getRecipeName());
+		return recipeRepo.save(original);
+	}
 }

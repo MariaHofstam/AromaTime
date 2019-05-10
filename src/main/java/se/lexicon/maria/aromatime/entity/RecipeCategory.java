@@ -27,7 +27,7 @@ public class RecipeCategory {
 			cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH},
 			fetch = FetchType.LAZY
 		)
-	@JoinTable(name= "recipe_categoriy"
+	@JoinTable(name= "recipe_category_joined"
 			, joinColumns= @JoinColumn(name= "category_id")
 			, inverseJoinColumns= @JoinColumn(name= "recipe_id"))
 	private List<Recipe> recipeList = new ArrayList<>(); 	//List of recipes for this category
@@ -41,7 +41,7 @@ public class RecipeCategory {
 		this.recipeList = recipeList;
 	}
 
-	protected RecipeCategory() {}
+	public RecipeCategory() {}
 	
 
 	public String getCategoryName() {

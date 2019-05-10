@@ -16,6 +16,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.JoinColumn;
 
@@ -31,7 +32,6 @@ public class Recipe {
 	@Column(name = "ShortDesc")
 	private String shortDescription;
 	
-	private String urlPath;
 	
 	@OneToMany(
 			cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH},
@@ -39,23 +39,23 @@ public class Recipe {
 			mappedBy = "recipe",
 			orphanRemoval = true
 		)
-	private Set<RecipeContent> content = new TreeSet<>();
+	private List<RecipeContent> content = new ArrayList<>();
 	
 	
 	@ManyToMany(
 			cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH},
 			fetch = FetchType.LAZY
+			
 		)
-	@JoinTable(name= "recipe_categoriy"
+	@JoinTable(name= "recipe_category_joined"
 			, joinColumns= @JoinColumn(name= "recipe_id")
 			, inverseJoinColumns= @JoinColumn(name= "category_id"))
 	private List<RecipeCategory> categoryList = new ArrayList<>(); 	//List of categories for this recipe
 	
 	
-	public Recipe(String recipeName, String shortDescription, String urlPath) {
+	public Recipe(String recipeName, String shortDescription) {
 		this.recipeName = recipeName;
 		this.shortDescription = shortDescription;
-		this.urlPath = urlPath;
 	}
 
 	public Recipe() {}
@@ -77,20 +77,13 @@ public class Recipe {
 	public void setShortDescription(String shortDescription) {
 		this.shortDescription = shortDescription;
 	}
-
-	public String getUrlPath() {
-		return urlPath;
-	}
-
-	public void setUrlPath(String urlPath) {
-		this.urlPath = urlPath;
-	}
-
-	public Set<RecipeContent> getContent() {
+	
+	@JsonManagedReference
+	public List<RecipeContent> getContent() {
 		return content;
 	}
 
-	public void setContent(Set<RecipeContent> content) {
+	public void setContent(List<RecipeContent> content) {
 		this.content = content;
 	}
 

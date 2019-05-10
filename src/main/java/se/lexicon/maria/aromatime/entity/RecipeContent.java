@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 
 @Entity
 public class RecipeContent {
@@ -62,7 +64,8 @@ public class RecipeContent {
 	public void setOil(Oil oil) {
 		this.oil = oil;
 	}
-
+	
+	@JsonBackReference
 	public Recipe getRecipe() {
 		return recipe;
 	}

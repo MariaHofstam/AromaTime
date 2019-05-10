@@ -2,6 +2,8 @@ package se.lexicon.maria.aromatime.service;
 
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
+
 import se.lexicon.maria.aromatime.entity.Recipe;
 import se.lexicon.maria.aromatime.entity.RecipeContent;
 
@@ -16,10 +18,12 @@ public interface RecipeService {
 
 	Recipe save(Recipe recipe);
 
-	boolean removeRecipe(int id);
+	boolean removeRecipe(int id);	//needed?
 	
 	RecipeContent createRecipeContent(int oil_Id, int amount, String unit);
 
 	Recipe createRecipe (List<RecipeContent> recipeContent);
+	
+	Recipe update(int recipeId, Recipe updated) throws EntityNotFoundException;
 
 }

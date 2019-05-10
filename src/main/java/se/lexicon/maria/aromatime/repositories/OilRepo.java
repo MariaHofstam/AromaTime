@@ -8,5 +8,7 @@ import se.lexicon.maria.aromatime.entity.Oil;
 
 
 public interface OilRepo extends CrudRepository<Oil, Integer>{
-	List<Oil> findByNameIgnoreCase(String name);
+	
+	List<Oil> findByOilNameIgnoreCase(String name);
+	
 }

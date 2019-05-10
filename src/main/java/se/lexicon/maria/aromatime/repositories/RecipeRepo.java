@@ -9,5 +9,5 @@ import se.lexicon.maria.aromatime.entity.Recipe;
 
 
 public interface RecipeRepo extends CrudRepository<Recipe, Integer>{
-	List<Recipe> findByNameIgnoreCase(String name);
+	List<Recipe> findByRecipeNameIgnoreCase(String name);
 }
